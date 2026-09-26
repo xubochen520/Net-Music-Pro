@@ -21,7 +21,7 @@
 | Net Music | 1.5.2 或更高的 1.21.1 NeoForge 版本 |
 | Java（自行构建时） | 21 |
 
-将 Net Music 与 Net Music Pro 的 JAR 一起放进游戏的 `mods` 文件夹。多人游戏中，服务端及需要使用界面的客户端都应安装对应模组。已有存档的模组 ID 保持为 `yunpumusic`，请勿手动更改。
+从 [Releases](https://github.com/xubochen520/Net-Music-Pro/releases) 下载 Net Music Pro 的 JAR，将它与 Net Music 的 JAR 一起放进游戏的 `mods` 文件夹。多人游戏中，服务端及需要使用界面的客户端都应安装对应模组。已有存档的模组 ID 保持为 `yunpumusic`，请勿手动更改。
 
 ## 使用
 
