@@ -1,0 +1,26 @@
+# Local references and generated files
+.ref/
+**/.gradle/
+**/build/
+mod/run/
+mod/libs/
+*.jar
+!mod/gradle/wrapper/gradle-wrapper.jar
+
+# IDE and operating system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Local sessions, worlds and logs
+**/credentials.json
+**/saves/
+**/serverconfig/
+*.log
+*.log.gz
+
+# Python cache
+__pycache__/
+*.pyc

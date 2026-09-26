@@ -1,0 +1,12 @@
+{
+  "login_success": {
+    "category": "player",
+    "subtitle": "subtitle.yunpumusic.login_success",
+    "sounds": [
+      {
+        "name": "minecraft:random/levelup",
+        "stream": false
+      }
+    ]
+  }
+}

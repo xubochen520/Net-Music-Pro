@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "yunpumusic:block/yunpu_burner",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "yunpumusic:block/yunpu_burner",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "yunpumusic:block/yunpu_burner",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "yunpumusic:block/yunpu_burner",
+      "y": 270
+    }
+  }
+}

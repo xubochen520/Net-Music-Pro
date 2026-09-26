@@ -1,0 +1,52 @@
+{
+  "itemGroup.yunpumusic": "Net Music Pro",
+
+  "block.yunpumusic.yunpu_burner": "Yunpu Disc Studio",
+  "block.yunpumusic.yunpu_burner_top": "Yunpu Disc Studio",
+
+  "gui.yunpumusic.title": "Yunpu Disc Studio",
+  "gui.yunpumusic.boot.connecting": "Connecting to music services...",
+  "gui.yunpumusic.platform.kugou": "Kugou",
+  "gui.yunpumusic.platform.netease": "NetEase",
+  "gui.yunpumusic.platform.qq": "QQ Music",
+
+  "gui.yunpumusic.account.local": "Local account: %s",
+  "gui.yunpumusic.account.server": "Using the server-side account",
+  "gui.yunpumusic.account.none": "Not signed in - click \"Sign in\" to link an account",
+
+  "gui.yunpumusic.role.founder": "Owner",
+  "gui.yunpumusic.role.operator": "Operator",
+  "gui.yunpumusic.role.player": "Player",
+
+  "gui.yunpumusic.search.hint": "Song title or artist, fuzzy matching supported...",
+  "gui.yunpumusic.search.searching": "Searching...",
+  "gui.yunpumusic.search.results": " result(s)",
+
+  "gui.yunpumusic.list.empty": "No results yet - try searching for a song",
+  "gui.yunpumusic.list.retry": "Check your connection or sign-in state and retry",
+  "gui.yunpumusic.list.hint": "Select a song, insert a disc and create it",
+
+  "gui.yunpumusic.action.login": "Sign in",
+  "gui.yunpumusic.action.logout": "Sign out",
+  "gui.yunpumusic.action.sync": "Save to server",
+  "gui.yunpumusic.action.unsync": "Remove from server",
+  "gui.yunpumusic.action.tip": "VIP tracks require a membership on the matching platform",
+
+  "gui.yunpumusic.qr.title": "Sign in to %s",
+  "gui.yunpumusic.qr.loading": "Fetching QR code...",
+  "gui.yunpumusic.qr.requesting": "Requesting QR code...",
+  "gui.yunpumusic.qr.success": "Signed in",
+  "gui.yunpumusic.qr.refresh": "Refresh",
+  "gui.yunpumusic.qr.close": "Close",
+  "gui.yunpumusic.qr.image_fallback": "This platform returns a QR image; scan it with the matching mobile app. Click Refresh to retry if it cannot be shown.",
+
+  "gui.yunpumusic.server_store.allowed": "You are an owner/operator: credentials can be stored on the server",
+  "gui.yunpumusic.server_store.local_only": "Regular player: credentials stay on your own client",
+  "gui.yunpumusic.server_store.saved": "Saved the %s credentials to the server",
+  "gui.yunpumusic.server_store.cleared": "Removed the %s credentials from the server",
+  "gui.yunpumusic.server_store.denied": "Only the owner or an operator can store credentials on the server",
+
+  "subtitle.yunpumusic.login_success": "Signed in",
+  "gui.yunpumusic.burn.success": "Disc created. Take it from the output slot.",
+  "gui.yunpumusic.burn.failed": "Could not create disc. Insert a disc and clear the output slot."
+}

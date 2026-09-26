@@ -1,0 +1,249 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.147'
+}
+
+version = mod_version
+group = mod_group
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_version
+        minecraftVersion = project.parchment_minecraft
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+repositories {
+    maven { name = 'Aliyun Public'; url = 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    // Download the upstream mod at build time; do not redistribute its JAR.
+    implementation "maven.modrinth:net-music:${netmusic_version}-neoforge+mc${minecraft_version}"
+
+    // 开发期联调工具直接运行在普通 JVM 上，需要显式补上 Gson。
+    // 正式构建里 Gson 由 Minecraft 自带，不会被打进 JAR。
+    testImplementation 'com.google.code.gson:gson:2.10.1'
+    testRuntimeOnly 'com.google.code.gson:gson:2.10.1'
+}
+
+// ---------------------------------------------------------------------------
+// Resource expansion: fill ${...} placeholders inside neoforge.mods.toml
+// ---------------------------------------------------------------------------
+final def resourceTargets = ['META-INF/neoforge.mods.toml', 'pack.mcmeta']
+
+final def replaceProperties = [
+        minecraft_version      : minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        neo_version            : neo_version,
+        neo_version_range      : neo_version_range,
+        loader_version_range   : loader_version_range,
+        mod_id                 : mod_id,
+        mod_name               : mod_name,
+        mod_license            : mod_license,
+        mod_version            : mod_version,
+        mod_authors            : mod_authors,
+        mod_description        : mod_description,
+        netmusic_version_range : netmusic_version_range,
+]
+
+tasks.withType(ProcessResources).configureEach {
+    inputs.properties replaceProperties
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+// ---------------------------------------------------------------------------
+// 开发期联调任务：直接调用三个音乐平台的真实接口做验证。
+// 这些类只存在于 test 源集，不会被打进发布的 JAR。
+// ---------------------------------------------------------------------------
+tasks.named('test') {
+    // test 源集里只有手动运行的联调工具，没有 JUnit 用例
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('probeProviders', JavaExec) {
+    group = 'verification'
+    description = 'Probe the live Kugou / QQ / NetEase endpoints used by the mod.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevProviderProbe'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeKugouQr', JavaExec) {
+    group = 'verification'
+    description = 'Verify live Kugou QR creation and the initial waiting state without printing a QR key.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevKugouQrProbe'
+    jvmArgs '-Dfile.encoding=UTF-8'
+}
+
+tasks.register('probeKugouRights', JavaExec) {
+    group = 'verification'
+    description = 'Check the live Kugou membership and song VIP fields without printing credentials.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevKugouRightsProbe'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('kugouCredentialFile') ?: '').toString(),
+         (project.findProperty('probeKeyword') ?: '游京').toString())
+}
+
+tasks.register('probeLyrics', JavaExec) {
+    group = 'verification'
+    description = 'Check timed lyric availability across all supported platforms without printing lyrics.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevLyricsProbe'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('debugEndpoints', JavaExec) {
+    group = 'verification'
+    description = 'Dump raw responses from the QQ Music / Kugou endpoints for signature debugging.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointDebug'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeEndpoints2', JavaExec) {
+    group = 'verification'
+    description = 'Try alternative QQ Music / Kugou endpoints until a working one is found.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe2'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('verifyQr', JavaExec) {
+    group = 'verification'
+    description = 'Validate the bundled QR encoder against reference matrices.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.util.DevQrVerify'
+    args((project.findProperty('qrExpected') ?: "$rootDir/../.ref/qrtool/expected_py.json").toString())
+}
+
+tasks.register('renderQr', JavaExec) {
+    group = 'verification'
+    description = 'Render QR PNGs so an independent decoder can verify them.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.util.DevQrRender'
+    args((project.findProperty('qrOut') ?: "$rootDir/build/qrpng").toString())
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+        ])
+    }
+}
+
+tasks.register('probeEndpoints3', JavaExec) {
+    group = 'verification'
+    description = 'Exhaustively probe candidate QQ Music / Kugou endpoints.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe3'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeEndpoints4', JavaExec) {
+    group = 'verification'
+    description = 'Validate the finally selected QQ Music / Kugou endpoints.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe4'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeEndpoints5', JavaExec) {
+    group = 'verification'
+    description = 'Validate the final Kugou and QQ Music endpoints.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe5'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeEndpoints6', JavaExec) {
+    group = 'verification'
+    description = 'Inspect QQ mobile search structure and hunt for a working Kugou stream endpoint.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe6'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeEndpoints7', JavaExec) {
+    group = 'verification'
+    description = 'Validate the Kugou stream endpoint and QQ search parameter shapes.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevEndpointProbe7'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
+
+tasks.register('probeQqStream', JavaExec) {
+    group = 'verification'
+    description = 'Diagnose the QQ Music vkey stream resolution.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.yunpu.yunpumusic.dev.DevQqStreamProbe'
+    jvmArgs '-Dfile.encoding=UTF-8'
+    args((project.findProperty('probeKeyword') ?: '起风了').toString())
+}
