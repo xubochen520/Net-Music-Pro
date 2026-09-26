@@ -5,3 +5,4 @@
 - Music, lyrics, account data, and APIs provided by Kugou, NetEase Cloud Music, and QQ Music remain subject to their respective owners' terms and rights. They are not included in this repository.
 
 The `yunpu_burner.bbmodel` model and this repository's original textures were created for Net Music Pro.
+The project icon is a crop and frame of this repository's `yunpu_burner_preview.png` Blockbench model render.

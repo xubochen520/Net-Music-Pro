@@ -1,5 +1,7 @@
 # Net Music Pro
 
+![Net Music Pro 图标](assets/branding/net-music-pro-icon.png)
+
 适用于 **Minecraft 1.21.1 / NeoForge** 的 [Net Music](https://github.com/TartaricAcid/NetMusic) 附属模组。新增双格高的「云谱刻录台」，可搜索酷狗、网易云音乐和 QQ 音乐的歌曲，并将歌曲写入 Net Music 唱片。
 
 > 本项目不是上述音乐平台的官方客户端。歌曲能否获取和播放取决于平台接口、账号权限及 Net Music 的播放环境；请遵守相应平台的服务条款和版权规定。
@@ -11,6 +13,10 @@
 - 唱片名称显示平台颜色与 VIP 标记；唱片交由 Net Music 的 **Music Player** 播放，本模组为其补充同步歌词显示。
 - 登录会话默认保存在本地。服务器管理员可以选择把凭据保存到存档供服务器使用。
 - 附带 Blockbench 模型源文件 [`yunpu_burner.bbmodel`](yunpu_burner.bbmodel)。
+
+## 项目图标
+
+[`assets/branding/net-music-pro-icon.png`](assets/branding/net-music-pro-icon.png) 是 512 × 512 的方形 PNG，可用于 Modrinth 项目页面。图标直接取自本项目模型预览；[`assets/branding/net-music-pro-icon.svg`](assets/branding/net-music-pro-icon.svg) 保存了裁切和边框设置。相同 PNG 已包含在模组 JAR 内，供 NeoForge 模组列表显示。
 
 ## 安装
 

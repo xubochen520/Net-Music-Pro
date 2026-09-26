@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">Net Music Pro</title>
+  <desc id="description">A cropped render of the Yunpu disc burner from the project's Blockbench model preview.</desc>
+  <rect width="512" height="512" fill="#1b1d21"/>
+  <image href="../../yunpu_burner_preview.png" x="-17" y="25" width="560" height="504"/>
+  <rect x="0" y="0" width="185" height="115" fill="#1b1d21"/>
+  <rect x="8" y="8" width="496" height="496" rx="66" fill="none" stroke="#b6522e" stroke-width="9"/>
+</svg>

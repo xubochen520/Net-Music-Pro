@@ -8,7 +8,7 @@
 .\gradlew.bat build
 ```
 
-Linux/macOS：`./gradlew build`。产物在 `build/libs/net-music-pro-1.0.0.jar`。Gradle 从 Modrinth Maven 下载 Net Music；首次构建需要联网。不要将 `build/`、`run/` 或 `libs/` 内的文件提交到 Git。
+Linux/macOS：`./gradlew build`。产物在 `build/libs/net-music-pro-1.0.1.jar`。Gradle 从 Modrinth Maven 下载 Net Music；首次构建需要联网。不要将 `build/`、`run/` 或 `libs/` 内的文件提交到 Git。
 
 ## 工程结构
 
